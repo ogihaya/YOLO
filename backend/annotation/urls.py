@@ -9,4 +9,9 @@ urlpatterns = [
         views.train_annotation_view,
         name="train-annotation",
     ),
+    path(
+        "val/",
+        views.val_annotation_view,
+        name="val-annotation",
+    ),
 ]

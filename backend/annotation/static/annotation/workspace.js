@@ -1,4 +1,10 @@
 (function () {
+  const root = document.body;
+  const datasetSlug = root?.dataset.datasetSlug || "train";
+  const exportFilename =
+    root?.dataset.exportFilename || `${datasetSlug || "dataset"}.zip`;
+  const datasetName = root?.dataset.datasetName || datasetSlug;
+
   const state = {
     classes: [],
     images: [],
@@ -67,8 +73,7 @@
     state.classes.forEach((cls, index) => {
       const usage = state.images.reduce((count, img) => {
         return (
-          count +
-          img.annotations.filter((ann) => ann.classId === cls.id).length
+          count + img.annotations.filter((ann) => ann.classId === cls.id).length
         );
       }, 0);
       const item = document.createElement("div");
@@ -127,8 +132,7 @@
       previews.alt = img.name;
       const caption = document.createElement("span");
       caption.textContent = `${img.name} (${img.annotations.length})`;
-      button.appendChild(previews);
-      button.appendChild(caption);
+      button.append(previews, caption);
       button.addEventListener("click", () => {
         state.selectedImageId = img.id;
         state.activeBoxId = null;
@@ -213,16 +217,15 @@
         card.classList.add("is-active");
       }
 
-       const header = document.createElement("div");
-       header.className = "class-info";
-       const swatch = document.createElement("span");
-       swatch.className = "swatch";
-       swatch.style.backgroundColor = cls?.color ?? "#999";
-       const title = document.createElement("strong");
-       title.textContent = cls ? cls.name : "未定義";
-       header.appendChild(swatch);
-       header.appendChild(title);
-       card.appendChild(header);
+      const header = document.createElement("div");
+      header.className = "class-info";
+      const swatch = document.createElement("span");
+      swatch.className = "swatch";
+      swatch.style.backgroundColor = cls?.color ?? "#999";
+      const title = document.createElement("strong");
+      title.textContent = cls ? cls.name : "未定義";
+      header.append(swatch, title);
+      card.appendChild(header);
 
       ["x", "y", "width", "height"].forEach((key) => {
         const label = document.createElement("label");
@@ -263,13 +266,6 @@
       fragment.appendChild(card);
     });
     annotationListEl.appendChild(fragment);
-  }
-
-  function normalizeAnnotation(ann) {
-    ann.x = clamp(ann.x, 0, 1);
-    ann.y = clamp(ann.y, 0, 1);
-    ann.width = clamp(ann.width, 0, 1 - ann.x);
-    ann.height = clamp(ann.height, 0, 1 - ann.y);
   }
 
   function handleFiles(files) {
@@ -429,15 +425,22 @@
     renderImages();
   }
 
+  function normalizeAnnotation(ann) {
+    ann.x = clamp(ann.x, 0, 1);
+    ann.y = clamp(ann.y, 0, 1);
+    ann.width = clamp(ann.width, 0, 1 - ann.x);
+    ann.height = clamp(ann.height, 0, 1 - ann.y);
+  }
+
   stage.addEventListener("pointerdown", startDrawing);
   stage.addEventListener("pointermove", updateDrawing);
   stage.addEventListener("pointerup", finishDrawing);
   stage.addEventListener("pointerleave", finishDrawing);
 
   exportButton.addEventListener("click", () => {
-    if (typeof exportDialog.showModal === "function") {
+    if (typeof exportDialog?.showModal === "function") {
       exportDialog.showModal();
-    } else if (window.confirm("train.zip をエクスポートしますか？")) {
+    } else if (window.confirm(`${exportFilename} をエクスポートしますか？`)) {
       exportDataset();
     }
   });
@@ -461,9 +464,10 @@
       window.alert("JSZip の読み込みに失敗しました。");
       return;
     }
+    const slug = datasetSlug || "dataset";
     const zip = new JSZip();
-    const imageFolder = zip.folder("train/images");
-    const labelFolder = zip.folder("train/labels");
+    const imageFolder = zip.folder(`${slug}/images`);
+    const labelFolder = zip.folder(`${slug}/labels`);
     const classIndex = new Map();
     state.classes.forEach((cls, index) => {
       classIndex.set(cls.id, index);
@@ -499,7 +503,8 @@
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "train.zip";
+    link.download = exportFilename || `${slug}.zip`;
+    link.dataset.download = `${datasetName}-annotation`;
     document.body.appendChild(link);
     link.click();
     link.remove();

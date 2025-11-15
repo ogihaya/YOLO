@@ -4,37 +4,30 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Train データ用アノテーション</title>
-    <link
-      rel="stylesheet"
-      href="{% static 'annotation/styles.css' %}"
-    />
+    <title>{{ dataset_name }} データ用アノテーション</title>
+    <link rel="stylesheet" href="{% static 'annotation/styles.css' %}" />
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"
       integrity="sha256-/T6riw37ht4p59sj2CCOrvjD6a+wOOyy48WaG3K7JgM="
       crossorigin="anonymous"
     ></script>
-    <script
-      defer
-      src="{% static 'annotation/train.js' %}"
-    ></script>
+    <script defer src="{% static 'annotation/workspace.js' %}"></script>
   </head>
-  <body>
+  <body
+    data-dataset-slug="{{ dataset_slug }}"
+    data-export-filename="{{ export_filename }}"
+    data-dataset-name="{{ dataset_name }}"
+  >
     <header class="page-header">
       <div>
-        <p class="page-kicker">Phase 2</p>
-        <h1>Train データセット用アノテーション</h1>
+        <p class="page-kicker">{{ phase_label }}</p>
+        <h1>{{ dataset_name }} データセット用アノテーション</h1>
         <p class="page-subtitle">
-          画像インポート → クラス作成 → 矩形描画 → train.zip としてエクスポート
+          {{ subtitle }}
         </p>
       </div>
-      <button
-        id="exportButton"
-        class="primary"
-        type="button"
-        aria-haspopup="dialog"
-      >
+      <button id="exportButton" class="primary" type="button" aria-haspopup="dialog">
         完了
       </button>
     </header>
@@ -96,7 +89,7 @@
             <h2>2. 画像一覧</h2>
             <span id="imageCount" class="count-pill">0 枚</span>
           </div>
-          <div id="imageList" class="image-list" aria-live="polite"></div>
+            <div id="imageList" class="image-list" aria-live="polite"></div>
         </section>
 
         <section class="stage-section">
@@ -128,20 +121,16 @@
 
     <dialog id="exportDialog" class="modal">
       <form method="dialog" class="modal-card">
-        <h2>train.zip をエクスポートしますか？</h2>
+        <h2>{{ export_filename }} をエクスポートしますか？</h2>
         <p>
           エクスポートすると、現在のクラス・矩形が
-          <code>train/images</code> &amp; <code>train/labels</code> に保存された zip
+          <code>{{ dataset_slug }}/images</code> &amp;
+          <code>{{ dataset_slug }}/labels</code> に保存された zip
           ファイルがダウンロードされます。
         </p>
         <div class="modal-actions">
           <button value="cancel" type="button">キャンセル</button>
-          <button
-            value="export"
-            type="submit"
-            class="primary"
-            id="confirmExport"
-          >
+          <button value="export" type="submit" class="primary" id="confirmExport">
             エクスポート
           </button>
         </div>

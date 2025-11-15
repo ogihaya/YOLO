@@ -36,12 +36,15 @@ docker compose run --rm web python manage.py shell
 docker compose run --rm web python manage.py test
 ```
 
-## Annotation Workspace (Phase 2)
+## Annotation Workspaces (Phase 2 & 3)
 
-- `docker compose up` でサーバーを起動した後、ブラウザで <http://localhost:8000/api/train/> にアクセスします。
-- 左のクラスパネルでクラス名と色を登録し、クラスを選択してから画像上でドラッグすると矩形が作成されます。
-- 右側のフォームで矩形の数値（%）を直接編集・削除できます。
-- 「完了」ボタンを押すと `train/images` と `train/labels` を含んだ `train.zip` がブラウザからダウンロードされます。
+1. **Train (Phase 2)**  
+   <http://localhost:8000/api/train/> を開くと train データセット用のワークスペースが表示されます。  
+   クラスを追加 → 画像上でドラッグして矩形を描く → 「完了」で `train.zip` をダウンロードできます。
+
+2. **Val (Phase 3)**  
+   <http://localhost:8000/api/val/> にアクセスすると val データセット用のワークスペースになります。  
+   操作フローは train と同じで、エクスポート時には `val/images`・`val/labels` を含む `val.zip` がダウンロードされます。
 
 ## Repository Structure
 
