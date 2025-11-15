@@ -14,4 +14,14 @@ urlpatterns = [
         views.val_annotation_view,
         name="val-annotation",
     ),
+    path(
+        "inference/",
+        views.inference_view,
+        name="inference-view",
+    ),
+    path(
+        "inference/run/",
+        views.run_inference,
+        name="run-inference",
+    ),
 ]

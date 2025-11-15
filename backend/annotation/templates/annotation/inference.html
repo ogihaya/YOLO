@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'annotation/styles.css' %}" />
+    <script defer src="{% static 'annotation/inference.js' %}"></script>
+  </head>
+  <body>
+    <header class="page-header">
+      <div>
+        <p class="page-kicker">{{ phase_label }}</p>
+        <h1>{{ title }}</h1>
+        <p class="page-subtitle">
+          学習済みモデル(.pt)と推論したい画像をアップロードして「推論開始」を押すと結果が表示されます。
+        </p>
+      </div>
+      <button id="runButton" class="primary" type="button" disabled>
+        推論開始
+      </button>
+    </header>
+
+    <main class="inference-layout">
+      <section class="panel">
+        <h2>1. モデルインポート (.pt)</h2>
+        <div
+          id="modelDropZone"
+          class="drop-zone tall"
+          role="button"
+          tabindex="0"
+          aria-label=".pt ファイルをドラッグ＆ドロップしてください"
+        >
+          <p>
+            モデル（.pt）をここにドラッグ＆ドロップするか、
+            <span class="link-like">ファイル選択</span>
+          </p>
+          <p class="formats">1 ファイルのみ</p>
+        </div>
+        <input id="modelInput" type="file" accept=".pt" hidden />
+        <div id="modelMeta" class="model-meta hint">未選択</div>
+      </section>
+
+      <section class="panel">
+        <h2>2. 推論画像インポート</h2>
+        <div
+          id="imageDropZone"
+          class="drop-zone tall"
+          role="button"
+          tabindex="0"
+          aria-label="推論画像をドラッグ＆ドロップしてください"
+        >
+          <p>
+            ここに画像をドラッグ＆ドロップするか、
+            <span class="link-like">ファイル選択</span>
+          </p>
+          <p class="formats">jpg / jpeg / png 複数可</p>
+        </div>
+        <input
+          id="imageInput"
+          type="file"
+          accept="image/png,image/jpeg"
+          multiple
+          hidden
+        />
+        <div id="imageList" class="image-grid"></div>
+      </section>
+
+      <section class="panel">
+        <div class="section-header">
+          <h2>3. 推論結果</h2>
+          <span id="inferenceStatus" class="count-pill">未実行</span>
+        </div>
+        <div id="resultsContainer" class="results-grid">
+          <p class="hint">モデルと画像を選択して「推論開始」を押してください。</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

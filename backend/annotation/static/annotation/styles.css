@@ -74,10 +74,35 @@ select {
   padding: 24px 32px 48px;
 }
 
+.inference-layout {
+  display: grid;
+  gap: 24px;
+  padding: 24px 32px 48px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
 @media (max-width: 1024px) {
   .layout {
     grid-template-columns: 1fr;
   }
+
+  .inference-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel h2 {
+  margin-bottom: 0;
 }
 
 .class-panel {
@@ -194,6 +219,13 @@ select {
   transition: border-color 0.2s, background 0.2s;
 }
 
+.drop-zone.tall {
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .drop-zone.is-active {
   border-color: var(--primary);
   background: rgba(37, 99, 235, 0.08);
@@ -208,6 +240,11 @@ select {
 .formats {
   margin-top: 6px;
   font-size: 13px;
+}
+
+.model-meta {
+  font-size: 14px;
+  color: var(--muted);
 }
 
 .section-header {
@@ -225,10 +262,67 @@ select {
   font-size: 13px;
 }
 
+.count-pill.pill-info {
+  background: rgba(59, 130, 246, 0.15);
+  color: #1d4ed8;
+}
+
+.count-pill.pill-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: #b91c1c;
+}
+
+.count-pill.pill-success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #15803d;
+}
+
 .image-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 12px;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.image-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+.image-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.image-card-meta {
+  padding: 0 12px 12px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.ghost-button {
+  border: none;
+  background: rgba(15, 23, 42, 0.05);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  align-self: flex-end;
+  margin: 0 12px 12px;
 }
 
 .thumb {
@@ -427,6 +521,63 @@ select {
 
 .primary.full-width {
   width: 100%;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+.result-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--surface);
+}
+
+.result-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result-stage {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0f172a;
+}
+
+.result-stage img {
+  width: 100%;
+  display: block;
+}
+
+.result-stage .boxes-layer {
+  pointer-events: none;
+}
+
+.result-detections {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.detection-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.image-grid .hint,
+.results-grid .hint {
+  grid-column: 1 / -1;
 }
 
 .modal {

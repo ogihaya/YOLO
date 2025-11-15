@@ -46,6 +46,18 @@ docker compose run --rm web python manage.py test
    <http://localhost:8000/api/val/> にアクセスすると val データセット用のワークスペースになります。  
    操作フローは train と同じで、エクスポート時には `val/images`・`val/labels` を含む `val.zip` がダウンロードされます。
 
+## Inference Screen (Phase 3)
+
+- コンテナ起動後、ブラウザで <http://localhost:8000/api/inference/> を開きます。
+- `.pt` モデルを 1 つ選択し、推論対象の画像を複数ドラッグ＆ドロップして「推論開始」を押すと、ブラウザ上で結果が表示されます。
+- 検出結果はバウンディングボックスとクラス名/スコアで可視化され、各画像ごとに「結果画像を保存」で描画済み PNG をダウンロードできます。
+- バックエンドは `yolov9/bridge.py` を介して YOLOv9 資産と統合されており、`backend/annotation/services/yolov9_adapter.py` が Django からのアップロードをブリッジしています（現状は deterministic なダミー推論を返し、将来的に本物の YOLO パイプラインへ差し替え可能です）。
+
+## YOLOv9 Assets (Phase 4)
+
+- `yolov9/` ディレクトリから不要な `dataset/` と `tests/` を除外し、`yolov9/README.md` に整理内容と再取得方法を記載しています。
+- `yolov9/bridge.py` がアプリケーションと YOLO 実装を結ぶ統合ポイントです。将来的に PyTorch + YOLOv9 推論を組み込みたい場合はこのモジュールの実装を置き換えるだけで済みます。
+
 ## Repository Structure
 
 ```

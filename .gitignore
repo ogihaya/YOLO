@@ -1,3 +1,19 @@
 .cursor/
 
 .env.*
+.DS_Store
+__pycache__/
+*.py[cod]
+*.sqlite3
+.env
+.env.*
+.venv/
+node_modules/
+dist/
+build/
+coverage/
+media/
+*.zip
+*.pt
+yolov9/dataset/
+yolov9/tests/
