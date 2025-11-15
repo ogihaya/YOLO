@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Train データ用アノテーション</title>
+    <link
+      rel="stylesheet"
+      href="{% static 'annotation/styles.css' %}"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"
+      integrity="sha256-/T6riw37ht4p59sj2CCOrvjD6a+wOOyy48WaG3K7JgM="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      defer
+      src="{% static 'annotation/train.js' %}"
+    ></script>
+  </head>
+  <body>
+    <header class="page-header">
+      <div>
+        <p class="page-kicker">Phase 2</p>
+        <h1>Train データセット用アノテーション</h1>
+        <p class="page-subtitle">
+          画像インポート → クラス作成 → 矩形描画 → train.zip としてエクスポート
+        </p>
+      </div>
+      <button
+        id="exportButton"
+        class="primary"
+        type="button"
+        aria-haspopup="dialog"
+      >
+        完了
+      </button>
+    </header>
+
+    <div class="layout">
+      <aside class="class-panel" aria-label="クラス管理">
+        <h2>クラス</h2>
+        <div class="class-list" id="classList" aria-live="polite"></div>
+        <form id="classForm" class="class-form">
+          <label>
+            クラス名
+            <input
+              type="text"
+              name="className"
+              placeholder="例: person"
+              required
+              maxlength="32"
+            />
+          </label>
+          <label class="color-field">
+            色
+            <input type="color" name="classColor" value="#ff6b6b" required />
+          </label>
+          <button type="submit" class="primary full-width">追加</button>
+        </form>
+        <div class="hint">
+          クラスを選択してから画像上でドラッグすると矩形が描画されます。色はバウンディングボックスに反映されます。
+        </div>
+      </aside>
+      <main class="workspace">
+        <section class="import-panel">
+          <h2>1. 画像インポート</h2>
+          <div>
+            <div
+              id="dropZone"
+              class="drop-zone"
+              role="button"
+              tabindex="0"
+              aria-label="画像をドラッグ＆ドロップしてください"
+            >
+              <p>
+                ここに画像をドラッグ＆ドロップするか、
+                <span class="link-like">ファイル選択</span>
+              </p>
+              <p class="formats">対応形式: jpg / jpeg / png</p>
+            </div>
+            <input
+              id="fileInput"
+              type="file"
+              accept="image/png,image/jpeg"
+              multiple
+              hidden
+            />
+          </div>
+        </section>
+
+        <section class="image-gallery">
+          <div class="section-header">
+            <h2>2. 画像一覧</h2>
+            <span id="imageCount" class="count-pill">0 枚</span>
+          </div>
+          <div id="imageList" class="image-list" aria-live="polite"></div>
+        </section>
+
+        <section class="stage-section">
+          <h2>3. アノテーション</h2>
+          <div id="stagePlaceholder" class="placeholder">
+            画像とクラスを選択するとここでアノテーションできます。
+          </div>
+          <div id="stageWrapper" class="stage-wrapper hidden">
+            <div class="stage-toolbar">
+              <div>
+                <span>選択中の画像</span>
+                <strong id="currentImageName">-</strong>
+              </div>
+            </div>
+            <p id="stageNotice" class="stage-notice hidden" role="status"></p>
+            <div id="stage" class="stage" aria-live="polite">
+              <img id="stageImage" alt="" draggable="false" />
+              <div id="boxesLayer" class="boxes-layer"></div>
+              <div id="drawingGuide" class="drawing-guide hidden"></div>
+            </div>
+            <div class="annotations-panel">
+              <h3>矩形一覧</h3>
+              <div id="annotationList" class="annotation-list"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="exportDialog" class="modal">
+      <form method="dialog" class="modal-card">
+        <h2>train.zip をエクスポートしますか？</h2>
+        <p>
+          エクスポートすると、現在のクラス・矩形が
+          <code>train/images</code> &amp; <code>train/labels</code> に保存された zip
+          ファイルがダウンロードされます。
+        </p>
+        <div class="modal-actions">
+          <button value="cancel" type="button">キャンセル</button>
+          <button
+            value="export"
+            type="submit"
+            class="primary"
+            id="confirmExport"
+          >
+            エクスポート
+          </button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>

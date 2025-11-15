@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    working_dir: /app/backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+      - ./yolov9:/app/yolov9
+    env_file:
+      - .env.development
+    tty: true
+    stdin_open: true
